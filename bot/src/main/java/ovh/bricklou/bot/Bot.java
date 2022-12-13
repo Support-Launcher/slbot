@@ -2,20 +2,28 @@ package ovh.bricklou.bot;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ovh.bricklou.bot.core.Configuration;
+import ovh.bricklou.bot.services.ServiceManager;
 
 public class Bot {
     private static final Logger LOGGER = LoggerFactory.getLogger(Bot.class);
 
-    public void start() {
-        LOGGER.debug("Loading configuration");
+    private final ServiceManager serviceManager = new ServiceManager();
 
+    public void start() throws Exception {
         LOGGER.debug("Loading services");
+        this.serviceManager.register(Configuration.class);
+
+        if (!this.serviceManager.loadAll()) {
+            return;
+        }
 
         LOGGER.info("Starting bot !");
     }
 
     public void shutdown() {
         LOGGER.info("Preparing to shutdown");
+        this.serviceManager.unloadAll();
     }
 
     public static Logger getLogger() {
