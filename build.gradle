@@ -1,0 +1,13 @@
+allprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    compileJava.options.encoding = 'UTF-8'
+}
+
+tasks.named('build').configure {
+    dependsOn(':bot:build')
+}

@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'ovh.bricklou'
+version '1.0.0'
+
+sourceCompatibility = targetCompatibility = 17
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'ch.qos.logback:logback-classic:^1.0.0'
+    compileOnly 'net.dv8tion:JDA:5.0.0-beta.2'
+}
+
+application {
+    mainClass = 'ovh.bricklou.bot.Main'
+}
