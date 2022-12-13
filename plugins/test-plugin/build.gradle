@@ -1,0 +1,15 @@
+plugins {
+    id 'java-library'
+}
+
+group 'ovh.bricklou.bot'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'ch.qos.logback:logback-classic:1.4.5'
+    compileOnly 'net.dv8tion:JDA:5.0.0-beta.2'
+}

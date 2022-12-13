@@ -1,3 +1,4 @@
 rootProject.name = 'slbot'
 
 include 'bot'
+include 'plugins:test-plugin'
