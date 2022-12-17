@@ -1,6 +1,7 @@
 package ovh.bricklou.bot.core;
 
-import ovh.bricklou.bot.Bot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ovh.bricklou.bot.services.IService;
 import ovh.bricklou.bot.services.ServiceManager;
 
@@ -13,6 +14,7 @@ import java.util.Properties;
 public class Configuration extends IService {
     private final Properties properties = new Properties();
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
     public Configuration(ServiceManager manager) {
         super(manager);
     }
@@ -39,10 +41,10 @@ public class Configuration extends IService {
     @Override
     public boolean onLoad() {
         try {
-            Bot.getLogger().debug("Loading configuration file");
+            LOGGER.debug("Loading configuration file");
             this.load();
         } catch (Exception e) {
-            Bot.getLogger().error("Failed to load configuration: ", e);
+            LOGGER.error("Failed to load configuration: ", e);
             return false;
         }
 

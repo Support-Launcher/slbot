@@ -9,7 +9,7 @@ public class Main {
         try {
             bot.start();
         } catch (Exception e) {
-            Bot.getLogger().error("The bot has encountered an unexpected error: ", e);
+            Bot.logger().error("The bot has encountered an unexpected error: ", e);
         }
     }
 }

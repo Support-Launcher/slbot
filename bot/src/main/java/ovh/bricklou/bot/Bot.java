@@ -3,6 +3,7 @@ package ovh.bricklou.bot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ovh.bricklou.bot.core.Configuration;
+import ovh.bricklou.bot.services.PluginManager;
 import ovh.bricklou.bot.services.ServiceManager;
 
 public class Bot {
@@ -13,20 +14,28 @@ public class Bot {
     public void start() throws Exception {
         LOGGER.debug("Loading services");
         this.serviceManager.register(Configuration.class);
+        this.serviceManager.register(PluginManager.class);
 
         if (!this.serviceManager.loadAll()) {
             return;
         }
+
+        PluginManager manager = this.serviceManager.get(PluginManager.class);
+        manager.loadAll();
 
         LOGGER.info("Starting bot !");
     }
 
     public void shutdown() {
         LOGGER.info("Preparing to shutdown");
+
+        PluginManager manager = this.serviceManager.get(PluginManager.class);
+        manager.unloadAll();
+
         this.serviceManager.unloadAll();
     }
 
-    public static Logger getLogger() {
+    public static Logger logger() {
         return LOGGER;
     }
 }
