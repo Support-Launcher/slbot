@@ -3,4 +3,6 @@ rootProject.name = 'slbot'
 include 'bot'
 include 'plugins:test-plugin'
 include 'common'
+include 'plugins:slbot-plugin'
+findProject(':plugins:slbot-plugin')?.name = 'slbot-plugin'
 

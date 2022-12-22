@@ -47,6 +47,12 @@ public class PluginManager extends IService implements IPluginManager {
                     if (pluginClass == null) continue;
 
                     PluginDescriptor descriptor = pluginClass.getAnnotation(PluginDescriptor.class);
+
+                    if (this.plugins.containsKey(descriptor.name())) {
+                        LOGGER.error("Can't load plugin \"{}\" using \"{}\", the name has already been registered", pluginPath, descriptor.name());
+                        continue;
+                    }
+
                     IPlugin plugin = pluginClass.getDeclaredConstructor(IPluginManager.class, ServiceManager.class).newInstance(this, this.manager);
 
                     this.plugins.put(descriptor.name(), plugin);

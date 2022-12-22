@@ -39,6 +39,8 @@ public class Configuration extends IService {
         return this.properties.getProperty("token");
     }
 
+    public String get(String name) { return this.properties.getProperty(name); }
+
     @Override
     public boolean onLoad() {
         try {
