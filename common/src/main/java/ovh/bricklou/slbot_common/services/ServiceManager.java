@@ -1,13 +1,13 @@
 package ovh.bricklou.slbot_common.services;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ServiceManager {
 
     private final Map<String, IService> services = new HashMap<>();
 
-    public ServiceManager() {}
+    public ServiceManager() {
+    }
 
     public <T extends IService> void register(Class<T> ServiceClass) throws Exception {
         if (this.services.containsKey(ServiceClass.getName())) {
@@ -23,7 +23,10 @@ public class ServiceManager {
     }
 
     public boolean loadAll() {
-        for (var s : this.services.values()) {
+        var services = new java.util.ArrayList<>(this.services.values());
+        services.sort(Comparator.comparingInt(IService::getPriority));
+
+        for (var s : services) {
             if (!s.onLoad()) {
                 return false;
             }
@@ -33,11 +36,13 @@ public class ServiceManager {
     }
 
     public void unloadAll() {
-        for (var s : this.services.values()) {
+        var services = new java.util.ArrayList<>(this.services.values());
+        services.sort(Comparator.comparingInt(IService::getPriority));
+        Collections.reverse(services);
+
+        for (var s : services) {
             s.onStop();
         }
     }
 
-    public void boot() {
-    }
 }

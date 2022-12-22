@@ -9,10 +9,11 @@ import ovh.bricklou.slbot_common.services.IPluginManager;
 import ovh.bricklou.slbot_common.services.IService;
 import ovh.bricklou.slbot_common.services.ServiceManager;
 
-import java.lang.annotation.Annotation;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class PluginManager extends IService implements IPluginManager {
 
@@ -46,7 +47,7 @@ public class PluginManager extends IService implements IPluginManager {
                     if (pluginClass == null) continue;
 
                     PluginDescriptor descriptor = pluginClass.getAnnotation(PluginDescriptor.class);
-                    IPlugin plugin = pluginClass.getDeclaredConstructor(IPluginManager.class).newInstance(this);
+                    IPlugin plugin = pluginClass.getDeclaredConstructor(IPluginManager.class, ServiceManager.class).newInstance(this, this.manager);
 
                     this.plugins.put(descriptor.name(), plugin);
                     this.descriptors.put(descriptor.name(), descriptor);
@@ -64,10 +65,8 @@ public class PluginManager extends IService implements IPluginManager {
         return true;
     }
 
-    @Override
     public void loadAll() {
         List<String> order = generateLoadOrder();
-        LOGGER.debug("order: {}", order);
 
         for (var name : order) {
             IPlugin plugin = plugins.get(name);
@@ -104,7 +103,6 @@ public class PluginManager extends IService implements IPluginManager {
         }
     }
 
-    @Override
     public void unloadAll() {
         for (IPlugin plugin : plugins.values()) {
             plugin.onUnload();

@@ -1,4 +1,4 @@
-package ovh.bricklou.bot.core;
+package ovh.bricklou.slbot_common.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +15,7 @@ public class Configuration extends IService {
     private final Properties properties = new Properties();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
+
     public Configuration(ServiceManager manager) {
         super(manager);
     }
