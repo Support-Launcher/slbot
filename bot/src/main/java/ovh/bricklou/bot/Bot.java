@@ -2,9 +2,9 @@ package ovh.bricklou.bot;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ovh.bricklou.bot.core.Configuration;
 import ovh.bricklou.bot.services.PluginManager;
-import ovh.bricklou.bot.services.ServiceManager;
+import ovh.bricklou.slbot_common.services.ServiceManager;
+import ovh.bricklou.bot.core.Configuration;
 
 public class Bot {
     private static final Logger LOGGER = LoggerFactory.getLogger(Bot.class);

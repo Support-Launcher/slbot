@@ -1,4 +1,4 @@
-package ovh.bricklou.bot.services;
+package ovh.bricklou.slbot_common.services;
 
 public abstract class IService {
     protected ServiceManager manager;

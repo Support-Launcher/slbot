@@ -1,4 +1,4 @@
-package ovh.bricklou.bot.services;
+package ovh.bricklou.slbot_common.services;
 
 import java.util.HashMap;
 import java.util.Map;

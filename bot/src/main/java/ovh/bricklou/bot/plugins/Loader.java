@@ -1,6 +1,8 @@
 package ovh.bricklou.bot.plugins;
 
 import ovh.bricklou.bot.Bot;
+import ovh.bricklou.slbot_common.plugins.IPlugin;
+import ovh.bricklou.slbot_common.plugins.PluginDescriptor;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,16 +26,6 @@ public class Loader {
 
         var ucl = this.addClassesToClassLoader(p.toUri().toURL());
 
-        /*String classname = "ovh.bricklou.bot.TestPlugin";
-        try {
-            IPlugin c = (IPlugin) ucl.loadClass(classname).getDeclaredConstructor(IPluginManager.class).newInstance(new IPluginManager() {
-            });
-            //classes.add(c);
-            Bot.getLogger().debug("Loaded class \"{}\": {}", classname, c);
-        } catch (Throwable e) {
-            Bot.getLogger().error("WARNING: failed to instantiate {}", classname, e);
-        }*/
-
         for (Enumeration<JarEntry> entries = jar.entries(); entries.hasMoreElements(); ) {
             JarEntry entry = entries.nextElement();
             String file = entry.getName();
@@ -41,7 +33,6 @@ public class Loader {
             if (file.endsWith(".class")) {
                 String classname = file.substring(0, file.lastIndexOf('.')).replace('/', '.');
 
-                //var classnameURL = Path.of(classname).toUri().toURL();
                 try {
                     var c = ucl.loadClass(classname);
                     classes.add(c);
@@ -58,9 +49,6 @@ public class Loader {
                 continue;
             }
 
-            PluginDescriptor pluginDescriptor = aClass.getAnnotation(PluginDescriptor.class);
-            Bot.logger().debug("Found {}", pluginDescriptor);
-
             return aClass.asSubclass(IPlugin.class);
         }
 
@@ -68,16 +56,6 @@ public class Loader {
     }
 
     private URLClassLoader addClassesToClassLoader(URL aClass) {
-
         return new URLClassLoader(new URL[]{aClass}, ClassLoader.getSystemClassLoader());
-
-        /*try () {
-            Bot.getLogger().debug("Loader class: {}", aClass);
-            return new URLClassLoader(new URL[]{aClass}, ClassLoader.getSystemClassLoader());
-        } catch (Exception e) {
-            Bot.getLogger().error("Failed to add class to class loader", e);
-        }*/
-
-        //return null;
     }
 }

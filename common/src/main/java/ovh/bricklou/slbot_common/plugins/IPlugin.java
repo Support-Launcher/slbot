@@ -1,6 +1,7 @@
-package ovh.bricklou.bot.plugins;
+package ovh.bricklou.slbot_common.plugins;
 
-import ovh.bricklou.bot.services.IPluginManager;
+
+import ovh.bricklou.slbot_common.services.IPluginManager;
 
 public abstract class IPlugin {
     protected final IPluginManager manager;

@@ -2,15 +2,14 @@ plugins {
     id 'java-library'
 }
 
-group 'ovh.bricklou.test_plugin'
-version '1.0.0'
+group 'ovh.bricklou.slbot_common'
+version 'unspecified'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compileOnly project(path: ':common')
     compileOnly 'ch.qos.logback:logback-classic:1.4.5'
     compileOnly 'net.dv8tion:JDA:5.0.0-beta.2'
 }

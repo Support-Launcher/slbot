@@ -2,8 +2,8 @@ package ovh.bricklou.bot.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ovh.bricklou.bot.services.IService;
-import ovh.bricklou.bot.services.ServiceManager;
+import ovh.bricklou.slbot_common.services.ServiceManager;
+import ovh.bricklou.slbot_common.services.IService;
 
 import java.io.FileReader;
 import java.nio.file.Files;
