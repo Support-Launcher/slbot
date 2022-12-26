@@ -8,35 +8,58 @@ import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import ovh.bricklou.slbot_plugin.config.CommandConfig;
+import ovh.bricklou.slbot_plugin.config.PluginConfig;
+
+import java.util.HashMap;
 
 public class EventListenner extends ListenerAdapter {
+    private final PluginConfig config;
+    private final HashMap<String, CommandConfig> commands = new HashMap<>();
+
+    public EventListenner(PluginConfig c) {
+        this.config = c;
+    }
+
     @Override
     public void onReady(ReadyEvent event) {
         this.registerCommands(event.getJDA());
     }
 
     private void registerCommands(JDA jda) {
-        Guild guild = jda.getGuildById(842465969469522001L);
+        Guild guild = jda.getGuildById(this.config.guildId());
 
         if (guild == null) return;
 
-        guild.updateCommands().addCommands(
-                Commands.slash("about", "Affiche les informations du bot")
-        ).queue();
+
+        // Register all commands
+        var updateCommands = guild.updateCommands();
+        for (var cmd : this.config.commands()) {
+            commands.put(cmd.name, cmd);
+            updateCommands.addCommands(Commands.slash(cmd.name, cmd.description));
+        }
+        updateCommands.queue();
     }
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        if (!event.getName().equals("about")) return;
+        var c = commands.get(event.getName());
+        if (c == null) return;
 
-        var embed = new EmbedBuilder()
-                .setTitle("À propos")
-                .setDescription("Ce bot a pour but de gérer et de simplifier certains processus sur le serveur Discord de Support-Launcher.\n" +
-                        "Il va téléverser automatiquement les fichiers sur Hastebin (peut être évité en écrivant `--ignore` dans le message).")
-                .setColor(3447003)
-                .build();
+        var m = new MessageCreateBuilder();
+        if (c.embed != null) {
+            var embed = new EmbedBuilder();
+            embed.setTitle(c.embed.title);
+            embed.setDescription(c.message);
 
-        var message = new MessageCreateBuilder().addEmbeds(embed).build();
-        event.reply(message).queue();
+            if (c.embed.color != null) {
+                embed.setColor(c.embed.color);
+            }
+            m.addEmbeds(embed.build());
+        } else {
+            m.addContent(c.message);
+        }
+
+        event.reply(m.build()).queue();
     }
 }

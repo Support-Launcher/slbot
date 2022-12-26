@@ -39,7 +39,9 @@ public class JdaService extends IService {
 
     @Override
     public boolean onStop() {
-        this.jdaInstance.shutdown();
+        if (this.jdaInstance != null) {
+            this.jdaInstance.shutdown();
+        }
 
         return true;
     }

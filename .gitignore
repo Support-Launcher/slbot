@@ -1,4 +1,4 @@
 build/
 .gradle/
-/bot/bot.properties
+/bot/bot.toml
 /bot/plugins/

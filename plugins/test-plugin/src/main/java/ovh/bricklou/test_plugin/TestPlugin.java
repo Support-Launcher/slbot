@@ -26,9 +26,6 @@ public class TestPlugin extends IPlugin {
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .addEventListeners(new MessageListenner());
 
-        LOGGER.debug("builder: {}", jdaService.builder());
-        LOGGER.debug("registered event listeners");
-
         return true;
     }
 

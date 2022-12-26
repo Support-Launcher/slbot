@@ -8,6 +8,13 @@ allprojects {
     compileJava.options.encoding = 'UTF-8'
 }
 
-tasks.named('build').configure {
-    dependsOn(':bot:build')
+build {
+    dependsOn ':bot:build'
+}
+tasks.register("build-plugins") {
+    new File(rootDir, "plugins").listFiles().each {
+        if (it.directory && new File(it, 'build.gradle').exists()) {
+            dependsOn ":plugins:${it.name}:build"
+        }
+    }
 }
