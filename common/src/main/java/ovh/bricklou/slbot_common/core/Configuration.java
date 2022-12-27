@@ -13,9 +13,9 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.function.Supplier;
 
 public class Configuration extends IService {
-    private FileConfig properties;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
+    private FileConfig properties;
+    private BotConfig botConfig;
 
     public Configuration(ServiceManager manager) {
         super(manager);
@@ -28,14 +28,14 @@ public class Configuration extends IService {
         }
 
 
-        try (FileConfig config = FileConfig.of(p)){
+        try (FileConfig config = FileConfig.of(p)) {
             config.load();
             this.properties = config;
         }
 
         var pluginConfig = Path.of("plugins.toml");
         if (Files.exists(pluginConfig)) {
-            try (FileConfig config = FileConfig.of(pluginConfig)){
+            try (FileConfig config = FileConfig.of(pluginConfig)) {
                 config.load();
                 this.properties.addAll(config);
             }
@@ -45,16 +45,18 @@ public class Configuration extends IService {
             throw new InvalidPropertiesFormatException("Invalid configuration file");
         }
 
-        if (!this.properties.contains("bot.token")) {
-            throw new InvalidPropertiesFormatException("Bot token not configured");
-        }
+        this.botConfig = new ObjectConverter().toObject(this.properties, BotConfig::new);
     }
 
-    public String getToken() {
-        return this.properties.get("bot.token");
+    public BotConfig botConfig() {
+        return this.botConfig;
     }
 
-    public <T> T getObject(Supplier<T> supplier, String path) {
+    public <T> T get(String path) {
+        return this.properties.get(path);
+    }
+
+    public <T> T getObject(Supplier<T> supplier) {
         return new ObjectConverter().toObject(this.properties, supplier);
     }
 
@@ -69,5 +71,17 @@ public class Configuration extends IService {
         }
 
         return true;
+    }
+
+    public void reload() throws Exception {
+        this.load();
+    }
+
+    public void save() {
+        this.properties.save();
+    }
+
+    public FileConfig getProperties() {
+        return properties;
     }
 }

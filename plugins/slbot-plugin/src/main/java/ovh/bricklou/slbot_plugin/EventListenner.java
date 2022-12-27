@@ -15,35 +15,14 @@ import java.util.HashMap;
 
 public class EventListenner extends ListenerAdapter {
     private final PluginConfig config;
-    private final HashMap<String, CommandConfig> commands = new HashMap<>();
 
     public EventListenner(PluginConfig c) {
         this.config = c;
     }
 
     @Override
-    public void onReady(ReadyEvent event) {
-        this.registerCommands(event.getJDA());
-    }
-
-    private void registerCommands(JDA jda) {
-        Guild guild = jda.getGuildById(this.config.guildId());
-
-        if (guild == null) return;
-
-
-        // Register all commands
-        var updateCommands = guild.updateCommands();
-        for (var cmd : this.config.commands()) {
-            commands.put(cmd.name, cmd);
-            updateCommands.addCommands(Commands.slash(cmd.name, cmd.description));
-        }
-        updateCommands.queue();
-    }
-
-    @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        var c = commands.get(event.getName());
+        /*var c = commands.get(event.getName());
         if (c == null) return;
 
         var m = new MessageCreateBuilder();
@@ -60,6 +39,6 @@ public class EventListenner extends ListenerAdapter {
             m.addContent(c.message);
         }
 
-        event.reply(m.build()).queue();
+        event.reply(m.build()).queue();*/
     }
 }

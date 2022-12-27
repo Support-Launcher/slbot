@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ovh.bricklou.slbot_common.core.Configuration;
@@ -25,7 +24,7 @@ public class JdaService extends IService {
         LOGGER.debug("Configuring jda builder");
         var config = this.manager.get(Configuration.class);
 
-        this.builder = JDABuilder.createDefault(config.getToken())
+        this.builder = JDABuilder.createDefault(config.botConfig().getToken())
                 .setEnabledIntents(GatewayIntent.getIntents(GatewayIntent.DEFAULT))
                 .disableCache(Arrays.asList(CacheFlag.values()));
 
@@ -46,7 +45,7 @@ public class JdaService extends IService {
         return true;
     }
 
-    public @Nullable JDA instance() {
+    public JDA instance() {
         return this.jdaInstance;
     }
 

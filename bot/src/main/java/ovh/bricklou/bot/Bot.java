@@ -2,6 +2,7 @@ package ovh.bricklou.bot;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ovh.bricklou.bot.jda.EventListenner;
 import ovh.bricklou.slbot_common.services.JdaService;
 import ovh.bricklou.bot.services.PluginManager;
 import ovh.bricklou.slbot_common.services.ServiceManager;
@@ -28,6 +29,9 @@ public class Bot {
 
         LOGGER.info("Configuring bot !");
         JdaService jdaService = this.serviceManager.get(JdaService.class);
+
+        jdaService.builder().addEventListeners(new EventListenner(this.serviceManager));
+
         jdaService.start();
     }
 

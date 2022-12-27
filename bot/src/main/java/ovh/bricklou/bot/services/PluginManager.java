@@ -3,6 +3,7 @@ package ovh.bricklou.bot.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ovh.bricklou.bot.plugins.Loader;
+import ovh.bricklou.slbot_common.core.Configuration;
 import ovh.bricklou.slbot_common.plugins.IPlugin;
 import ovh.bricklou.slbot_common.plugins.PluginDescriptor;
 import ovh.bricklou.slbot_common.services.IPluginManager;
@@ -12,6 +13,7 @@ import ovh.bricklou.slbot_common.services.ServiceManager;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,7 +21,10 @@ public class PluginManager extends IService implements IPluginManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginManager.class);
     private final HashMap<String, IPlugin> plugins = new HashMap<>();
+    private final HashMap<String, PluginState> state = new HashMap<>();
     private final HashMap<String, PluginDescriptor> descriptors = new HashMap<>();
+
+    private Configuration config;
 
     public PluginManager(ServiceManager manager) {
         super(manager);
@@ -27,6 +32,8 @@ public class PluginManager extends IService implements IPluginManager {
 
     @Override
     public boolean onLoad() {
+        this.config = this.manager.get(Configuration.class);
+
         Path pluginsFolder = Path.of("./plugins");
         try {
             if (!Files.exists(pluginsFolder)) {
@@ -57,6 +64,7 @@ public class PluginManager extends IService implements IPluginManager {
 
                     this.plugins.put(descriptor.name(), plugin);
                     this.descriptors.put(descriptor.name(), descriptor);
+                    this.state.put(descriptor.name(), PluginState.Unloaded);
                 } catch (Exception e) {
                     LOGGER.error("Failed to load plugin \"{}\"", pluginPath, e);
                 }
@@ -75,12 +83,19 @@ public class PluginManager extends IService implements IPluginManager {
         List<String> order = generateLoadOrder();
 
         for (var name : order) {
-            IPlugin plugin = plugins.get(name);
-            if (plugin == null) {
-                LOGGER.error("Failed to find plugin \"{}\", this should not happend", name);
-                continue;
+            if (!load(name)) {
+                LOGGER.error("Failed to load plugin \"{}\"", name);
             }
-            plugin.onLoad();
+        }
+    }
+
+    public void unloadAll() {
+        var list = new ArrayList<>(plugins.keySet().stream().toList());
+        Collections.reverse(list);
+        for (var name : list) {
+            if (!unload(name)) {
+                LOGGER.error("Failed to unload plugin \"{}\"", name);
+            }
         }
     }
 
@@ -109,9 +124,50 @@ public class PluginManager extends IService implements IPluginManager {
         }
     }
 
-    public void unloadAll() {
-        for (IPlugin plugin : plugins.values()) {
-            plugin.onUnload();
+    public boolean load(String name) {
+        if (!this.plugins.containsKey(name)) return false;
+
+        // Skip if already loaded
+        if (this.state.get(name) == PluginState.Loaded) return true;
+
+        var result = this.plugins.get(name).onLoad();
+        if (result) {
+            this.state.put(name, PluginState.Loaded);
         }
+        return result;
+    }
+
+    public boolean unload(String name, boolean disable) {
+        if (!this.plugins.containsKey(name)) return false;
+
+        if (this.state.get(name) == PluginState.Unloaded) return true;
+
+        var result = this.plugins.get(name).onUnload();
+        if (result) {
+            this.state.put(name, PluginState.Unloaded);
+        }
+        return result;
+    }
+
+    public boolean unload(String name) {
+        return unload(name, false);
+    }
+
+    public HashMap<String, PluginDescriptor> getDescriptors() {
+        return descriptors;
+    }
+
+    public HashMap<String, IPlugin> getPlugins() {
+        return plugins;
+    }
+
+    public PluginState getState(String name) {
+        var s = this.state.get(name);
+        if (s == null) return PluginState.NotFound;
+        return s;
+    }
+
+    public HashMap<String, PluginState> getPluginsState() {
+        return state;
     }
 }
