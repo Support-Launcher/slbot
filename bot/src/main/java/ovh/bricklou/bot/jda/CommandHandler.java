@@ -137,6 +137,17 @@ public class CommandHandler {
                 }
                 createInfoEmbed(event, "Plugin Manager", "Plugin `%s` unloaded and disabled".formatted(name));
             }
+            case "sync" -> {
+                try {
+                    pluginManager.syncPluginFolder();
+                    pluginManager.loadAll();
+                } catch (Exception e) {
+                    logger.error("Failed to re-sync plugin folder: ", e);
+                    createEmbed(event, "Plugin Manager", "Failed to re-sync plugin folder, please check logs", Color.RED);
+                }
+
+                createInfoEmbed(event, "Plugin Manager", "Plugin folder re-synched");
+            }
             default -> createEmbed(event, "Plugin Manager", "Unknown commands", Color.RED);
         }
     }

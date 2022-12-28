@@ -48,6 +48,9 @@ public class PluginManager extends IService implements IPluginManager {
     public boolean syncPluginFolder() throws Exception {
         LOGGER.info("Synchronize plugins from plugin folder.");
 
+        this.unloadAll();
+        this.plugins.clear();
+
         Path pluginsFolder = Path.of("./plugins");
 
         if (!Files.exists(pluginsFolder)) {
@@ -73,8 +76,8 @@ public class PluginManager extends IService implements IPluginManager {
                 PluginDescriptor descriptor = pluginClass.getAnnotation(PluginDescriptor.class);
 
                 if (this.plugins.containsKey(descriptor.name())) {
-                    this.unload(descriptor.name());
-                    this.plugins.remove(descriptor.name());
+                    LOGGER.error("Can't load plugin \"{}\" using \"{}\", the name has already been registered", pluginPath, descriptor.name());
+                    continue;
                 }
 
                 IPlugin plugin = pluginClass.getDeclaredConstructor(IPluginManager.class, ServiceManager.class).newInstance(this, this.manager);

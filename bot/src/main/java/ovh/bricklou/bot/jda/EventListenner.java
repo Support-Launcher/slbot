@@ -59,7 +59,8 @@ public class EventListenner extends ListenerAdapter {
                 new SubcommandData("enable", "Enable a plugin")
                         .addOption(OptionType.STRING, "name", "Name of the plugin", true, true),
                 new SubcommandData("disable", "Disable a plugin")
-                        .addOption(OptionType.STRING, "name", "Name of the plugin", true, true)));
+                        .addOption(OptionType.STRING, "name", "Name of the plugin", true, true),
+                new SubcommandData("sync", "Sync plugins folder")));
 
         List<CommandData> cmds = List.of(
                 Commands.slash("reload-config", "Reload the bot configurations"),
