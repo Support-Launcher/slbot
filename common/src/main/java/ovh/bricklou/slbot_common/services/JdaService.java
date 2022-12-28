@@ -45,6 +45,10 @@ public class JdaService extends IService {
         return true;
     }
 
+    public boolean isBotStarted() {
+        return this.jdaInstance != null;
+    }
+
     public JDA instance() {
         return this.jdaInstance;
     }

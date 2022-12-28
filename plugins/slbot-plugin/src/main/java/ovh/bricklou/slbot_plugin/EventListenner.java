@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import org.jetbrains.annotations.NotNull;
 import ovh.bricklou.slbot_plugin.config.CommandConfig;
 import ovh.bricklou.slbot_plugin.config.PluginConfig;
 
@@ -21,24 +22,31 @@ public class EventListenner extends ListenerAdapter {
     }
 
     @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        /*var c = commands.get(event.getName());
-        if (c == null) return;
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        CommandConfig cmdConfig = null;
+
+        for (var c : this.config.commands()) {
+            if (c.name.equals(event.getName())) {
+                cmdConfig = c;
+                break;
+            }
+        }
+        if (cmdConfig == null) return;
 
         var m = new MessageCreateBuilder();
-        if (c.embed != null) {
+        if (cmdConfig.embed != null) {
             var embed = new EmbedBuilder();
-            embed.setTitle(c.embed.title);
-            embed.setDescription(c.message);
+            embed.setTitle(cmdConfig.embed.title);
+            embed.setDescription(cmdConfig.message);
 
-            if (c.embed.color != null) {
-                embed.setColor(c.embed.color);
+            if (cmdConfig.embed.color != null) {
+                embed.setColor(cmdConfig.embed.color);
             }
             m.addEmbeds(embed.build());
         } else {
-            m.addContent(c.message);
+            m.addContent(cmdConfig.message);
         }
 
-        event.reply(m.build()).queue();*/
+        event.reply(m.build()).queue();
     }
 }

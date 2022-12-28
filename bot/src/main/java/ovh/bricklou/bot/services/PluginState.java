@@ -1,6 +1,7 @@
 package ovh.bricklou.bot.services;
 
 public enum PluginState {
+    Disabled("Disabled"),
     Loaded("Loaded"),
     Unloaded("Unloaded"),
     NotFound("Not found");

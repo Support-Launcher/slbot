@@ -1,11 +1,8 @@
 package ovh.bricklou.slbot_plugin;
 
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import ovh.bricklou.slbot_common.core.Configuration;
 import ovh.bricklou.slbot_common.plugins.IPlugin;
@@ -22,9 +19,27 @@ import java.util.List;
 public class SLBotPlugin extends IPlugin {
     public static final String ID = "slbot-plugin";
     private PluginConfig config;
+    private EventListenner listener;
 
     public SLBotPlugin(IPluginManager manager, ServiceManager serviceManager) {
         super(manager, serviceManager);
+    }
+
+    @Override
+    public boolean onPreload() {
+        var config = this.serviceManager.get(Configuration.class);
+        this.config = config.getObject(PluginConfig::new);
+
+        if (this.listener == null) {
+            this.listener = new EventListenner(this.config);
+        }
+
+        JdaService jdaService = this.serviceManager.get(JdaService.class);
+        jdaService.builder()
+                .enableIntents(GatewayIntent.MESSAGE_CONTENT)
+                .addEventListeners(this.listener);
+
+        return true;
     }
 
     @Override
@@ -32,10 +47,22 @@ public class SLBotPlugin extends IPlugin {
         var config = this.serviceManager.get(Configuration.class);
         this.config = config.getObject(PluginConfig::new);
 
+        if (this.listener == null) {
+            this.listener = new EventListenner(this.config);
+        }
+
         JdaService jdaService = this.serviceManager.get(JdaService.class);
-        jdaService.builder()
-                .enableIntents(GatewayIntent.MESSAGE_CONTENT)
-                .addEventListeners(new EventListenner(this.config));
+        jdaService.instance().addEventListener(this.listener);
+
+        return true;
+    }
+
+    @Override
+    public boolean onUnload() {
+        JdaService jdaService = this.serviceManager.get(JdaService.class);
+        if (jdaService.isBotStarted()) {
+            jdaService.instance().removeEventListener(this.listener);
+        }
 
         return true;
     }

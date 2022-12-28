@@ -1,8 +1,6 @@
 package ovh.bricklou.test_plugin;
 
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ovh.bricklou.slbot_common.plugins.IPlugin;
 import ovh.bricklou.slbot_common.plugins.PluginDescriptor;
 import ovh.bricklou.slbot_common.services.IPluginManager;
@@ -11,15 +9,17 @@ import ovh.bricklou.slbot_common.services.ServiceManager;
 
 @PluginDescriptor(name = "test-plugin", author = "Bricklou", version = "1.0.0")
 public class TestPlugin extends IPlugin {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestPlugin.class);
+    private MessageListenner listener;
 
     public TestPlugin(IPluginManager manager, ServiceManager serviceManager) {
         super(manager, serviceManager);
     }
 
     @Override
-    public boolean onLoad() {
-        LOGGER.debug("Hi !");
+    public boolean onPreload() {
+        if (this.listener == null) {
+            this.listener = new MessageListenner();
+        }
 
         JdaService jdaService = this.serviceManager.get(JdaService.class);
         jdaService.builder()
@@ -30,8 +30,23 @@ public class TestPlugin extends IPlugin {
     }
 
     @Override
+    public boolean onLoad() {
+        if (this.listener == null) {
+            this.listener = new MessageListenner();
+        }
+
+        JdaService jdaService = this.serviceManager.get(JdaService.class);
+        jdaService.instance().addEventListener(this.listener);
+
+        return true;
+    }
+
+    @Override
     public boolean onUnload() {
-        LOGGER.debug("Bye !");
+        JdaService jdaService = this.serviceManager.get(JdaService.class);
+        if (jdaService.isBotStarted()) {
+            jdaService.instance().removeEventListener(this.listener);
+        }
 
         return true;
     }

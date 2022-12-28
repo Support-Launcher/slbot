@@ -6,7 +6,6 @@ import ovh.bricklou.slbot_common.services.IPluginManager;
 import ovh.bricklou.slbot_common.services.ServiceManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public abstract class IPlugin {
@@ -16,6 +15,10 @@ public abstract class IPlugin {
     public IPlugin(IPluginManager manager, ServiceManager serviceManager) {
         this.manager = manager;
         this.serviceManager = serviceManager;
+    }
+
+    public boolean onPreload() {
+        return true;
     }
 
     public boolean onLoad() {

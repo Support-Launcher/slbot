@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ovh.bricklou.bot.services.PluginManager;
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventListenner extends ListenerAdapter {
-    private static final String[] COMMANDS_NAME = {"plugin", "reload-config"};
     private static final Logger LOGGER = LoggerFactory.getLogger(EventListenner.class);
     private final ServiceManager manager;
 
@@ -30,7 +30,7 @@ public class EventListenner extends ListenerAdapter {
     }
 
     @Override
-    public void onReady(ReadyEvent event) {
+    public void onReady(@NotNull ReadyEvent event) {
         var pluginsManager = this.manager.get(PluginManager.class);
 
         List<CommandData> commandDataList = new ArrayList<>(this.registerBuiltinCommands());
@@ -44,16 +44,22 @@ public class EventListenner extends ListenerAdapter {
     }
 
     private List<CommandData> registerBuiltinCommands() {
-        List<SubcommandData> subcmds = List.of(
+        List<SubcommandData> subcmds = new ArrayList<>(List.of(
                 new SubcommandData("reload", "Reload a plugin"),
                 new SubcommandData("load", "Load a plugin"),
                 new SubcommandData("unload", "Unload a plugin"),
                 new SubcommandData("state", "Get plugin state")
-        );
+        ));
 
         for (var s : subcmds) {
             s.addOption(OptionType.STRING, "name", "Name of the plugin", false, true);
         }
+
+        subcmds.addAll(List.of(
+                new SubcommandData("enable", "Enable a plugin")
+                        .addOption(OptionType.STRING, "name", "Name of the plugin", true, true),
+                new SubcommandData("disable", "Disable a plugin")
+                        .addOption(OptionType.STRING, "name", "Name of the plugin", true, true)));
 
         List<CommandData> cmds = List.of(
                 Commands.slash("reload-config", "Reload the bot configurations"),
@@ -69,9 +75,10 @@ public class EventListenner extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+        LOGGER.debug("slashcommand \"{}\" issued", event.getName());
         switch (event.getName()) {
             case "plugins" -> CommandHandler.handlePluginCmd(event, this.manager, LOGGER);
-            case "reload-config" -> CommandHandler.reloadConfiguration(this.manager);
+            case "reload-config" -> CommandHandler.reloadConfiguration(event, this.manager);
             default -> {
             }
         }

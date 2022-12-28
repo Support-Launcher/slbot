@@ -28,18 +28,10 @@ public class Configuration extends IService {
         }
 
 
-        try (FileConfig config = FileConfig.of(p)) {
-            config.load();
-            this.properties = config;
+        if (this.properties == null) {
+            this.properties = FileConfig.builder(p).sync().build();
         }
-
-        var pluginConfig = Path.of("plugins.toml");
-        if (Files.exists(pluginConfig)) {
-            try (FileConfig config = FileConfig.of(pluginConfig)) {
-                config.load();
-                this.properties.addAll(config);
-            }
-        }
+        this.properties.load();
 
         if (this.properties == null) {
             throw new InvalidPropertiesFormatException("Invalid configuration file");
@@ -50,10 +42,6 @@ public class Configuration extends IService {
 
     public BotConfig botConfig() {
         return this.botConfig;
-    }
-
-    public <T> T get(String path) {
-        return this.properties.get(path);
     }
 
     public <T> T getObject(Supplier<T> supplier) {
@@ -70,6 +58,12 @@ public class Configuration extends IService {
             return false;
         }
 
+        return true;
+    }
+
+    @Override
+    public boolean onStop() {
+        this.properties.close();
         return true;
     }
 
