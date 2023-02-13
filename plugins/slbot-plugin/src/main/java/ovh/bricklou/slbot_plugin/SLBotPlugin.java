@@ -4,6 +4,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ovh.bricklou.slbot_common.core.Configuration;
 import ovh.bricklou.slbot_common.plugins.IPlugin;
 import ovh.bricklou.slbot_common.plugins.PluginDescriptor;
@@ -59,9 +61,11 @@ public class SLBotPlugin extends IPlugin {
 
     @Override
     public boolean onUnload() {
-        JdaService jdaService = this.serviceManager.get(JdaService.class);
-        if (jdaService.isBotStarted()) {
-            jdaService.instance().removeEventListener(this.listener);
+        if (this.listener != null) {
+            JdaService jdaService = this.serviceManager.get(JdaService.class);
+            if (jdaService.isBotStarted()) {
+                jdaService.instance().removeEventListener(this.listener);
+            }
         }
 
         return true;
