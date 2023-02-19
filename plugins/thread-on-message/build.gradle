@@ -1,0 +1,17 @@
+plugins {
+    id 'java-library'
+}
+
+group 'fr.zuygui.thread-on-message'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly project(path: ':common')
+    compileOnly 'ch.qos.logback:logback-classic:1.4.5'
+    compileOnly 'net.dv8tion:JDA:5.0.0-beta.2'
+    compileOnly 'com.electronwill.night-config:toml:3.6.0'
+}

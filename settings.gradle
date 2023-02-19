@@ -9,3 +9,6 @@ new File(rootDir, "plugins").listFiles().each {
         include ":plugins:${it.name}"
     }
 }
+include 'plugins:thread-on-message'
+findProject(':plugins:thread-on-message')?.name = 'thread-on-message'
+

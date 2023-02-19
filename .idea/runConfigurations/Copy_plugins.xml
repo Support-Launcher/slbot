@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Copy plugins" type="ShConfigurationType">
-    <option name="SCRIPT_TEXT" value="rm ./bot/plugins/* &amp;&amp; cp ./plugins/*/build/libs/*.jar ./bot/plugins/" />
+    <option name="SCRIPT_TEXT" value="rm ./bot/plugins/*; cp ./plugins/*/build/libs/*.jar ./bot/plugins/" />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="cp ./plugins/*/build/libs/*.jar ./bot/plugins/" />
     <option name="SCRIPT_OPTIONS" value="" />
