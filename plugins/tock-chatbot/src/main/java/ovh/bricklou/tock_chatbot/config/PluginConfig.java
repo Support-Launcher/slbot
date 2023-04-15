@@ -7,23 +7,14 @@ import ovh.bricklou.tock_chatbot.TockApiPlugin;
 import java.util.ArrayList;
 
 public class PluginConfig {
-    @Path("plugins." + TockApiPlugin.ID + ".tock_api_url")
+    @Path("plugins." + TockApiPlugin.ID + ".tock-api-url")
     @SpecNotNull
     private String tockApiUrl;
-
-    @Path("plugins." + TockApiPlugin.ID + ".tock_api_token")
-    @SpecNotNull
-    private String tockApiToken;
-
-    @Path("plugins." + TockApiPlugin.ID + ".trigger_words")
+    @Path("plugins." + TockApiPlugin.ID + ".trigger-words")
     private ArrayList<String> triggerWords;
 
     public String tockApiUrl() {
         return tockApiUrl;
-    }
-
-    public String tockApiToken() {
-        return tockApiToken;
     }
 
     public ArrayList<String> triggerWords() {

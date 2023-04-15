@@ -19,10 +19,7 @@ public class MessageListenner extends ListenerAdapter {
 
     public MessageListenner(TockApiPlugin plugin) {
         this.plugin = plugin;
-        this.tockClient = new TockAPIClient(
-                this.plugin.getConfig().tockApiUrl(),
-                this.plugin.getConfig().tockApiToken()
-        );
+        this.tockClient = new TockAPIClient(this.plugin.getConfig().tockApiUrl());
     }
 
     @Override
@@ -47,7 +44,7 @@ public class MessageListenner extends ListenerAdapter {
             }
 
             if (response == null) {
-                LOGGER.error("Failed to query Tock API");
+                LOGGER.error("Failed to query Tock API: response is null");
                 return;
             }
 
