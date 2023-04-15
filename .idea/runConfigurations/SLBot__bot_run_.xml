@@ -18,6 +18,7 @@
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <DebugAllEnabled>false</DebugAllEnabled>
+    <ForceTestExec>false</ForceTestExec>
     <method v="2">
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="SLBot [plugins:build]" run_configuration_type="GradleRunConfiguration" />
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Copy plugins" run_configuration_type="ShConfigurationType" />

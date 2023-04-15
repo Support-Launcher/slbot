@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ovh.bricklou.bot.services.PluginManager;
+import ovh.bricklou.bot.services.PluginState;
 import ovh.bricklou.slbot_common.services.JdaService;
 import ovh.bricklou.slbot_common.services.ServiceManager;
 
@@ -34,8 +35,10 @@ public class EventListenner extends ListenerAdapter {
         var pluginsManager = this.manager.get(PluginManager.class);
 
         List<CommandData> commandDataList = new ArrayList<>(this.registerBuiltinCommands());
-        for (var p : pluginsManager.getPlugins().values()) {
-            commandDataList.addAll(p.registerCommands());
+        for (var kv : pluginsManager.getPlugins().entrySet()) {
+            if (pluginsManager.getState(kv.getKey()) != PluginState.Loaded)
+                continue;
+            commandDataList.addAll(kv.getValue().registerCommands());
         }
 
         var jdaService = this.manager.get(JdaService.class);

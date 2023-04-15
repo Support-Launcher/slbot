@@ -191,7 +191,9 @@ public class PluginManager extends IService implements IPluginManager {
         if (!this.plugins.containsKey(name)) return false;
 
         var disabledPlugins = new ArrayList<>(this.config.botConfig().disabledPlugins());
-        disabledPlugins.add(name);
+        if (!disabledPlugins.contains(name)) {
+            disabledPlugins.add(name);
+        }
         config.getProperties().set("bot.disabled-plugins", disabledPlugins);
         config.save();
         config.reload();

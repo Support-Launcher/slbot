@@ -4,7 +4,6 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
@@ -16,6 +15,7 @@
             <option value="$PROJECT_DIR$/plugins/cross-post" />
             <option value="$PROJECT_DIR$/plugins/slbot-plugin" />
             <option value="$PROJECT_DIR$/plugins/test-plugin" />
+            <option value="$PROJECT_DIR$/plugins/tock-chatbot" />
           </set>
         </option>
       </GradleProjectSettings>
