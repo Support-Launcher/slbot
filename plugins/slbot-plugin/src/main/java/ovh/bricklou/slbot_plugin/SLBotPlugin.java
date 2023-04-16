@@ -4,8 +4,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ovh.bricklou.slbot_common.core.Configuration;
 import ovh.bricklou.slbot_common.plugins.IPlugin;
 import ovh.bricklou.slbot_common.plugins.PluginDescriptor;
@@ -33,7 +31,7 @@ public class SLBotPlugin extends IPlugin {
         this.config = config.getObject(PluginConfig::new);
 
         if (this.listener == null) {
-            this.listener = new EventListenner(this.config);
+            this.listener = new EventListenner(this);
         }
 
         JdaService jdaService = this.serviceManager.get(JdaService.class);
@@ -50,7 +48,7 @@ public class SLBotPlugin extends IPlugin {
         this.config = config.getObject(PluginConfig::new);
 
         if (this.listener == null) {
-            this.listener = new EventListenner(this.config);
+            this.listener = new EventListenner(this);
         }
 
         JdaService jdaService = this.serviceManager.get(JdaService.class);
@@ -87,5 +85,9 @@ public class SLBotPlugin extends IPlugin {
         guild.updateCommands().addCommands(cmds).queue();
 
         return new ArrayList<>();
+    }
+
+    protected PluginConfig getConfig() {
+        return this.config;
     }
 }
