@@ -13,6 +13,15 @@ public class PluginConfig {
     @Path("plugins." + TockApiPlugin.ID + ".trigger-words")
     private ArrayList<String> triggerWords;
 
+    @Path("plugins." + TockApiPlugin.ID + ".train_mode")
+    private boolean trainMode;
+
+    public PluginConfig() {
+        this.tockApiUrl = "";
+        this.triggerWords = new ArrayList<>();
+        this.trainMode = false;
+    }
+
     public String tockApiUrl() {
         return tockApiUrl;
     }
@@ -22,5 +31,9 @@ public class PluginConfig {
             return new ArrayList<>();
         }
         return triggerWords;
+    }
+
+    public boolean trainMode() {
+        return trainMode;
     }
 }

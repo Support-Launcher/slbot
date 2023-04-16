@@ -1,12 +1,10 @@
 package ovh.bricklou.tock_chatbot;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ovh.bricklou.tock_chatbot.config.PluginConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +31,7 @@ public class MessageListenner extends ListenerAdapter {
 
         // If one of the trigger words is in the message, send it to Tock
         for (String triggerWord : triggerWords) {
-            if (!content.contains(triggerWord)) continue;
+            if (!content.toLowerCase().contains(triggerWord.toLowerCase())) continue;
 
             String response;
             try {
@@ -45,6 +43,10 @@ public class MessageListenner extends ListenerAdapter {
 
             if (response == null) {
                 LOGGER.error("Failed to query Tock API: response is null");
+                return;
+            }
+
+            if (this.plugin.getConfig().trainMode()) {
                 return;
             }
 
