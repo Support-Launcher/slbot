@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     implementation 'ch.qos.logback:logback-classic:1+'
-    implementation 'net.dv8tion:JDA:5.0.0-beta.8'
+    implementation 'net.dv8tion:JDA:5.0.0-beta.9'
     compileOnly 'com.electronwill.night-config:toml:3+'
     implementation project(path: ':common')
 }
