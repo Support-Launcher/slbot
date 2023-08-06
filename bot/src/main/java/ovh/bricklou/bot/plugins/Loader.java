@@ -56,6 +56,7 @@ public class Loader {
     }
 
     private URLClassLoader addClassesToClassLoader(URL aClass) {
-        return new URLClassLoader(new URL[]{aClass}, ClassLoader.getSystemClassLoader());
+        //return new URLClassLoader(new URL[]{aClass}, ClassLoader.getSystemClassLoader());
+        return new URLClassLoader(new URL[]{aClass}, this.getClass().getClassLoader());
     }
 }

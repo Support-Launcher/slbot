@@ -15,9 +15,9 @@ build {
 tasks.register("build-plugins") {
     new File(rootDir, "plugins").listFiles().each {
         if (it.directory && new File(it, 'build.gradle').exists()) {
-            if (it.name == "tock-chatbot") {
+            if (it.name == "slbot-plugin") {
                 dependsOn ":plugins:${it.name}:shadowJar"
-                return // tock-chatbot is a special case
+                return // theses plugins are a special case
             }
             dependsOn ":plugins:${it.name}:build"
         }

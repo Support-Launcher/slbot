@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class IPlugin {
     protected final IPluginManager manager;
-    protected final ServiceManager serviceManager;
+    public final ServiceManager serviceManager;
 
     public IPlugin(IPluginManager manager, ServiceManager serviceManager) {
         this.manager = manager;

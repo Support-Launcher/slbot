@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/plugins/cross-post" />
             <option value="$PROJECT_DIR$/plugins/slbot-plugin" />
             <option value="$PROJECT_DIR$/plugins/test-plugin" />
-            <option value="$PROJECT_DIR$/plugins/tock-chatbot" />
           </set>
         </option>
       </GradleProjectSettings>
